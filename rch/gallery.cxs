@@ -1,0 +1,83 @@
+' Richard Hanson 2017
+' use at own risk
+' Version 1.0
+
+Strict 
+
+#If TARGET="android"
+Import "native/android.gallery.java"
+#ANDROID_MANIFEST_MAIN+="<uses-permission android:name=~qandroid.permission.READ_EXTERNAL_STORAGE~q />"
+#End
+
+Import mojo.app
+
+Class Gallery
+Private
+	Field gallery:photogallery
+Public	
+	Field List:String[]
+
+	Method GetPermission:Void()
+		gallery.GetPermission()
+	End
+	
+	Method CheckPermission:Int()
+		Return gallery.checkPermission()
+	End
+
+	Method New()
+		gallery = New photogallery()
+	End
+
+	Method GetGallery:Void()
+		List = gallery.getPhotos()
+	End	
+		
+	Method LoadPhotoData:Int[](photo:String,chopx:Int=-1,chopy:Int=-1)
+		Return gallery.loadPhotoData(photo,chopx,chopy)
+	End
+End
+
+Private
+
+#If TARGET="android"
+
+Extern 
+
+Class photogallery
+
+	Method getPermission:Void()
+	
+	Method checkPermission:Int()
+	
+	Method getPhotos:String[]()
+
+	Method loadPhoto:Void(uri:String,filename:String,chopx:Int=-1,chopy:Int=-1)
+
+	Method loadPhotoData:Int[](uri:String,chopx:Int,chopy:Int)
+	
+End
+#Else
+Class photogallery
+	Method getPermission:Void()
+	End
+		
+	Method checkPermission:Int()
+		Return False
+	End
+
+	Method getPhotos:String[]()
+		Return []
+	End
+
+	Method loadPhoto:Void(uri:String,filename:String,chopx:Int=-1,chopy:Int=-1)
+	End
+
+	Method loadPhotoData:Int[](uri:String,chopx:Int,chopy:Int)
+		Return []
+	End
+	
+End
+
+#End
+

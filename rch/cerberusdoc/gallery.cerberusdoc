@@ -1,0 +1,67 @@
+
+# Module rch.gallery
+
+The gallery module provides simple access to your devices internal storage
+
+# Class rch.gallery.Gallery
+
+The photo class provides simple access to the rch gallery, which allows you to load photos into your game or application.
+
+Example:
+
+Import mojo
+Import rch.gallery
+
+Class MyApp Extends App
+
+  Field photos:Gallery
+	Field photo_img:Image
+	
+  Method OnCreate()
+	photos = New Gallery()
+	photo_img = CreateImage(600,600)
+  End
+
+  Method OnUpdate()
+    If MouseHit( 0 )
+		If photos.CheckPermission()
+			If photos.List.Length() = 0 Then photos.GetGallery()
+			
+			If photos.List.Length() > 0
+				' gets a random photo ARGB block and writes it to an image
+				photo_img.WritePixels( photos.LoadPhotoData(photos.List[ Rnd(photos.List.Length()) ], 600, 600) ,0,0,600,600) 
+			end
+		end
+    End
+  End
+
+  Method OnRender()
+	Cls
+    PushMatrix
+	DrawImage photo_img,0,0
+    PopMatrix
+  End
+End
+
+Function Main()
+  New MyApp
+End
+
+# Method GetPermission:int()
+
+Gets Permission to read external storage
+
+# Method CheckPermission:int()
+
+Checks to see if permission has been granted. If not, auto asks for permission.
+
+# Method GetGallery:String[]()
+
+Returns an array with photo locations on the device. Pass this to LoadPhotoData to load an image.
+
+# Method LoadPhotoData:Int[](image:String,size_x:Int,size_y:Int)
+
+Returns an ARGB array containing pixel data. Use WritePixel to write it to an image. 
+
+# Field List:String[]
+
